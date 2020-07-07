@@ -1,5 +1,6 @@
 ﻿@page  "/"
 @inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
 
 <div class="main">
     <ul class="pizza-cards">
@@ -34,9 +35,8 @@
 
             @foreach (var configuredPizza in order.Pizzas)
             {
-                <ConfiguredPizzaItem 
-                    Pizza="configuredPizza" 
-                    OnRemoved="@(() => RemoveConfiguredPizza(configuredPizza))" />
+                <ConfiguredPizzaItem Pizza="configuredPizza"
+                                     OnRemoved="@(() => RemoveConfiguredPizza(configuredPizza))" />
             }
         </div>
     }
@@ -56,10 +56,9 @@
 
 @if (showingConfigureDialog)
 {
-    <ConfigurePizzaDialog 
-         Pizza="configuringPizza"
-         OnCancel="CancelConfigurePizzaDialog"
-         OnConfirm="ConfirmConfigurePizzaDialog" />
+    <ConfigurePizzaDialog Pizza="configuringPizza"
+                          OnCancel="CancelConfigurePizzaDialog"
+                          OnConfirm="ConfirmConfigurePizzaDialog" />
 }
 
 @code{
@@ -107,8 +106,10 @@
 
     async Task PlaceOrder()
     {
-        await HttpClient.PostAsJsonAsync("orders", order);
+        var response = await HttpClient.PostAsJsonAsync("orders", order);
+        var newOrderId = await response.Content.ReadFromJsonAsync<int>();
         order = new Order();
+        NavigationManager.NavigateTo($"myorders/{newOrderId}");
     }
 
 }
