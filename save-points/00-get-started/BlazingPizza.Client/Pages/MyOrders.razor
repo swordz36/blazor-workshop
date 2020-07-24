@@ -1,5 +1,5 @@
 ﻿@page "/myorders"
-@inject HttpClient HttpClient
+@inject OrdersClient OrdersClient
 
 <div class="main">
     @if (orderWithStatuses == null)
@@ -43,6 +43,14 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        orderWithStatuses = await HttpClient.GetFromJsonAsync<List<OrderWithStatus>>("orders");
+        try
+        {
+            orderWithStatuses = await OrdersClient.GetOrders();
+        }
+        catch (AccessTokenNotAvailableException ex)
+        {
+            ex.Redirect();
+        }
+
     }
 }

@@ -9,7 +9,7 @@ namespace BlazingPizza.Client
         public Pizza ConfiguringPizza { get; private set; }
 
         public Order Order { get; private set; } = new Order();
-       
+
 
         public void ShowConfigurePizzaDialog(PizzaSpecial special)
         {
@@ -47,6 +47,11 @@ namespace BlazingPizza.Client
         public void RemoveConfiguredPizza(Pizza pizza)
         {
             Order.Pizzas.Remove(pizza);
+        }
+
+        public void ReplaceOrder(Order order)
+        {
+            Order = order;
         }
     }
 }
